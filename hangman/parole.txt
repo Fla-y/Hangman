@@ -1,0 +1,13 @@
+telefono 8
+lattina 7
+computer 8
+penna 5
+sale 4
+libro 5
+mela 4
+giochi 6
+latte 5
+acqua 5
+casa 4
+biblioteca 10
+
