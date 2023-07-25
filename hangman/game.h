@@ -9,8 +9,7 @@
 typedef struct
 {
 	char word[DIM];
-	int dim;  //nb dim non conta \0 per cui di base se lo uso per la dimensione devo incrementarlo di uno
-	//IL MOTIVO PER CUI NON HA FUNZIONATO FINO AD ORA è ESATTAMENTE QUESTO, CONTROLLA E RIPROVA
+	int dim;  
 
 }word;
 
