@@ -2,16 +2,16 @@
 
 //la parola viene scelta casualmente da una lista di parole  -->lista o array?
 //il gioco indica il numero di lettere
-//magari in base alla difficoltà posso inserire o meno la prima lettera
+//magari in base alla difficoltÃ  posso inserire o meno la prima lettera
 //indica il numero di vite
-//indica le lettere già tentate
+//indica le lettere giÃ  tentate
 //la lista viene creata a partire da un file di testo
 
 /*leggo il file 1 volta e conto le righe
 genero un numero casuale tra 1 e il numero di righe
 leggo nuovamente il file fino alla riga che corrisponde al numero generato
-salvo la parola in un array inserito a sua volta in una struttura solo perchè più comodo
-----per ora l'array è statico, dopo proverò una versione a memoria dinamica
+salvo la parola in un array inserito a sua volta in una struttura solo perchÃ¨ piÃ¹ comodo
+----per ora l'array Ã¨ statico, dopo proverÃ² una versione a memoria dinamica
 */
 
 //The file has a list of words, this makes it easy to add new words to the game
@@ -56,7 +56,7 @@ word readFile(char* fileName) {
 	return temp;
 }
 
-//magari in futuro metterò un check che controlli che tutte e lettere siano minuscole, per ora lo do per scontato
+//magari in futuro metterÃ² un check che controlli che tutte e lettere siano minuscole, per ora lo do per scontato
 
 //____________________________________________________________________________________________________________________________
 
@@ -105,7 +105,7 @@ int game(word answer) {
 	char* wordGuess;
 	word check;
 	int used = 0, isValid=0; //isValid=1 if the letter guessed is a valid one
-	int lives = 6,point; //magari più avanti creando un menù di partenza posso creare varie difficoltà con più o meno vite e parole diverse
+	int lives = 6,point; //magari piÃ¹ avanti creando un menÃ¹ di partenza posso creare varie difficoltÃ  con piÃ¹ o meno vite e parole diverse
 
 	wordGuess = (char*)malloc(len * sizeof(char));
 	if (wordGuess == NULL) {
@@ -136,7 +136,7 @@ int game(word answer) {
 				printf("the letter you just typed is not valid, please use a letter from the english alphabet");
 			}
 			printf("\nGuess a letter?\n");
-			guess = getchar(); //ora come ora do per scontato che il carattere inserito sia minuscolo e che sia valido, poi lo migliorerò...
+			guess = getchar(); 
 			trash = getchar();
 
 			for (; trash != '\n';) {
@@ -173,7 +173,7 @@ int game(word answer) {
 		usedLetters[tries] = guess;
 
 		check = checkInWord(guess, answer);
-		if (check.dim != 0) {  //in questo caso la lettera è stata trovata
+		if (check.dim != 0) {  //in questo caso la lettera Ã¨ stata trovata
 			for (int i = 0; i < (len-1); i++) {
 				if (check.word[i] != '1') {
 					wordGuess[i] = check.word[i];
