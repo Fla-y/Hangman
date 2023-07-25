@@ -14,7 +14,7 @@ salvo la parola in un array inserito a sua volta in una struttura solo perchè pi
 ----per ora l'array è statico, dopo proverò una versione a memoria dinamica
 */
 
-//leggo il file
+//The file has a list of words, this makes it easy to add new words to the game
 
 word readFile(char* fileName) {
 
@@ -28,7 +28,7 @@ word readFile(char* fileName) {
 	fp = fopen(fileName, "r");
 	if (fp == NULL)
 	{
-		printf("ERRORE nell'apertura del file: %s", fileName);
+		printf("ERROR while trying to open the file: %s", fileName);
 		return error;
 	}
 
@@ -39,12 +39,11 @@ word readFile(char* fileName) {
 	}
 
 	rewind(fp);
-
-	//ho contato il numero di righe del file, quindi ora posso scegliere a caso una parola all'interno del file
+	//now i know the number of words in the file, so i can choose one randomly
 	srand(time(NULL));
 	wordSel = rand() % (nLines + 1);
 	wordSel++;
-	printf("%d\n", wordSel);
+	//printf("%d\n", wordSel);
 
 	while (i<=wordSel && i!= -1) {
 		n = fscanf(fp, "%s %d", &temp.word, &temp.dim);
@@ -66,106 +65,6 @@ word readFile(char* fileName) {
 numero di lettere fornito ma non la prima lettera*/
 
 
-/*    Temp
-word checkword(char c, word answer) {
-	int i, result;
-	word temp;
-	temp.dim = 0;
-	for (i = 0; i < answer.dim; i++) {
-		if (c == answer.word[i]) {
-			temp.dim = 1;
-			temp.word[i] = c;
-		}
-		else {
-			temp.word[i] = '0';
-		}
-	}
-	return temp;
-}
-
-int game(word answer) {
-	int lives = 6,len,test,safe,win=0,guessCount=0,i=0;
-	char guess;
-	len = answer.dim;
-	char alphabet[27];
-	char* sol;
-
-	sol = (char*)malloc(len * sizeof(char));
-	if (sol == NULL) {
-		printf("Errore nell' allocazione della memoria...\n");
-		exit(0);
-	}
-
-	word esito;
-
-	for (int i = 0; i < len; i++) {
-		printf("_ ");
-	}
-	printf("\n");
-	
-	do {
-		if (i != 0) {
-			printf("lettere già provate: ");
-			for (int k = 0; k < i; k++) {
-				printf("%c ", alphabet[k]);
-			}
-			printf("\n");
-		}
-
-		printf("prova una lettera;\n");
-		guess = getchar();
-		if (i == 0) {
-			alphabet[i] = guess;
-			//controllo se è nella parola, altrimenti tolgo una vita
-			esito = checkword(guess, answer);
-			if (esito.dim != 1) {
-				lives--;
-			}
-			else {
-				for (int counter = 0; counter < len; counter++) {
-					if (esito.word[counter] != '0' && counter<len) {
-						printf("trovata la lettera %c in posizione: %d\n", guess, counter);
-						
-					}
-				}
-			}
-
-		}
-		else {
-			for (int j = 0; j < i && i < 27; j++) {
-				if (guess == alphabet[j]) {
-					j = i;
-					printf("lettera già usata, prova con un' altra\n");
-				}
-				else {
-					if (j == i) {
-						i++;
-						alphabet[i] = guess;
-						lives--;
-					}
-				}
-			}
-		}
-		i++;
-	} while (lives>0 && win!=1);
-	
-
-	if (win == 1) {
-		printf("congratulazioni hai vinto!");
-		return 1;
-	}
-	else {
-		printf("peccato, hai perso");
-		return 2;
-	}
-
-	free(sol);
-
-}
-
-*/
-
-
 word checkInWord(char guess, word answer) {
 	int len;
 	len = answer.dim+1;
@@ -175,14 +74,14 @@ word checkInWord(char guess, word answer) {
 	
 	sol = (char*)malloc(len * sizeof(char));
 	if (sol == NULL) {
-		printf("Errore nell' allocazione della memoria...\n");
+		printf("Error in memory allocation\n");
 		exit(0);
 	}
 
 	for (int i = 0; i < (len-1); i++) {
 		if (guess == answer.word[i]) {
 			sol[i] = guess;
-			printf("lettera trovata in posizione: %d\n", i);
+			printf("letter found in spot n: %d\n", i);
 			status = 1;
 			counter++;
 		}
@@ -195,42 +94,82 @@ word checkInWord(char guess, word answer) {
 	strcpy(checkStatus.word, sol);
 
 	free(sol);
-	checkStatus.dim = counter; //uso il parametro dimensione per indicare il numero di volte che la lettera appare nella parola 
+	checkStatus.dim = counter; //the dim parameter is used to tell how many times the letter was found in the word
 	return checkStatus;
 
 }
 
 int game(word answer) {
-	int len = answer.dim+1,win=0, tries=0; //win=1 se vinci, altrimenti è 0
-	char guess, usedLetters[27],alphabet[27]="abcdefghijklmnopqrstuvwxyz";
+	int len = answer.dim+1,win=0, tries=0,k=0; //win=1 means you won, otherwise it's 0
+	char guess, usedLetters[27],alphabet[27]="abcdefghijklmnopqrstuvwxyz",trash;
 	char* wordGuess;
 	word check;
+	int used = 0, isValid=0; //isValid=1 if the letter guessed is a valid one
 	int lives = 6,point; //magari più avanti creando un menù di partenza posso creare varie difficoltà con più o meno vite e parole diverse
 
 	wordGuess = (char*)malloc(len * sizeof(char));
 	if (wordGuess == NULL) {
-		printf("Errore nell' allocazione della memoria...\n");
+		printf("Error in memory allocation\n");
 		exit(0);
 	}
 
 	for (int i = 0; i < (len-1); i++) {
-		wordGuess[i] = '-'; //inizializzo la parola per facilitarmi dopo il lavoro
+		wordGuess[i] = '-'; //shows how long the word actually is
 	}
 
 	wordGuess[len - 1] = '\0';
 
+	printf("%s\n", wordGuess);
+
 	do {
-		printf("vite rimaste: %d\n", lives);
+		printf("lives: %d\n", lives);
 		if (tries != 0) {
-			printf("lettere già usate: ");
+			printf("used letters: ");
 		}
 		for (int j = 0; j < tries; j++) {
 			printf("%c, ", usedLetters[j]);
 		}
 		
-		printf("\nChe lettera vuoi provare?\n");
-		guess=getchar(); //ora come ora do per scontato che il carattere inserito sia minuscolo e che sia valido, poi lo migliorerò...
-		getchar();
+
+		for (; isValid != 1;k++) {
+			if (k != 0) {
+				printf("the letter you just typed is not valid, please use a letter from the english alphabet");
+			}
+			printf("\nGuess a letter?\n");
+			guess = getchar(); //ora come ora do per scontato che il carattere inserito sia minuscolo e che sia valido, poi lo migliorerò...
+			trash = getchar();
+
+			for (; trash != '\n';) {
+				printf("You wrote more than a letter, I'll use the first one\n");
+				trash = getchar();
+			}
+			guess = tolower(guess);
+			for (int i = 0; alphabet[i] != '\0'; i++) {
+				if (guess == alphabet[i]) {
+					isValid = 1;
+				}
+			}
+		}
+
+
+		if (tries != 0) {
+			for (int k = 0;k<27 ; k++) {
+				if (used == 1) {
+					k = 0;
+				}
+				used = 0;
+				if (guess == usedLetters[k]) {
+					printf("Error, you have already tried this letter, try another one!\n");
+					guess = getchar;
+					trash=getchar();
+					for (; trash != '\n';) {
+						printf("You typed more than one letter, i'll take the first one\n");
+						trash = getchar();
+					}
+					used = 1;
+				}
+			}
+		}
 		usedLetters[tries] = guess;
 
 		check = checkInWord(guess, answer);
@@ -251,14 +190,16 @@ int game(word answer) {
 			lives--;
 		}
 		tries++;
+		isValid = 0;
+		k = 0;
 	} while (lives > 0 && win == 0);
 	free(wordGuess);
 	
 	if (win == 1) {
-		printf("congratulazioni, hai indovinato la parola!\n");
+		printf("Congratulation, you won!\n");
 	}
 	else {
-		printf("peccato, hai perso!\nla parola era:\n%s", answer.word);
+		printf("You lost!\nThe word was:\n%s", answer.word);
 	}
 
 	return win;
